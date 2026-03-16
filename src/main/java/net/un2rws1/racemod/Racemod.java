@@ -5,6 +5,7 @@ import net.fabricmc.api.ModInitializer;
 import net.un2rws1.racemod.block.ModBlocks;
 import net.un2rws1.racemod.item.ModItemGroups;
 import net.un2rws1.racemod.item.ModItems;
+import net.un2rws1.racemod.sound.ModSounds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,5 +19,8 @@ public class Racemod implements ModInitializer {
 
 		ModItems.registerModItems();
 		ModBlocks.registerModBlocks();
+
+	//	ModDataComponentTypes.registerDataComponentTypes();
+		ModSounds.registerSounds();
 	}
 }

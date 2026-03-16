@@ -8,10 +8,13 @@ import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.util.Identifier;
 import net.un2rws1.racemod.Racemod;
+import net.un2rws1.racemod.sound.ModSounds;
 
 public class ModItems {
     public static final Item POOP = registerItem("poop", new Item(new Item.Settings()));
-    public static final Item RABBI_TOTEM = registerItem("rabbi_totem", new Item(new Item.Settings()));
+    public static final Item RABBI_TOTEM = registerItem("rabbi_totem", new Item(new Item.Settings().maxCount(1)));
+    public static final Item HAVA_NAGILA_MUSIC_DISC = registerItem("hava_nagila_music_disc",
+            new Item(new Item.Settings().jukeboxPlayable(ModSounds.HAVA_NAGILA_KEY).maxCount(1)));
 
     private static Item registerItem(String name, Item item){
         return Registry.register(Registries.ITEM, Identifier.of(Racemod.MOD_ID, name), item);

@@ -1,0 +1,10 @@
+{
+  "hava_nagila": {
+    "sounds": [
+      {
+        "name": "race-mod:hava_nagila",
+        "stream": true
+      }
+    ]
+  }
+}

@@ -27,6 +27,7 @@ public class ModItemGroups {
                     .displayName(Text.translatable("itemgroup.race-mod.jewish_items"))
                     .entries(((displayContext, entries) -> {
                         entries.add(ModItems.RABBI_TOTEM);
+                        entries.add(ModItems.HAVA_NAGILA_MUSIC_DISC);
                     }))
                     .build());
 
