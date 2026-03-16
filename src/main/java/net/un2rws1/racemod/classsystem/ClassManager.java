@@ -11,6 +11,7 @@ import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import org.apache.logging.log4j.core.jmx.Server;
 import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
 
@@ -59,6 +60,9 @@ public final class ClassManager {
             player.addStatusEffect(new StatusEffectInstance(StatusEffects.HASTE, 220, 0, true, false));
             player.addStatusEffect(new StatusEffectInstance(StatusEffects.JUMP_BOOST, 220, 0, true, false));
         }
+        if (getPlayerClass((ServerPlayerEntity) player) == PlayerClass.CHINESE){
+            player.addStatusEffect(new StatusEffectInstance(StatusEffects.LUCK, 220, 1, false, false));
+        }
 
         //======================================Chinese damage ============================================================
         if (playerClass == PlayerClass.CHINESE) {
@@ -75,8 +79,12 @@ public final class ClassManager {
             }
         }
 
-        //=====================================Passive abilities (testing)==========================
-
+        //=====================================Other abilities (testing)==========================
+        if (getPlayerClass((ServerPlayerEntity) player) == PlayerClass.BLACK){
+            if(player.isTouchingWaterOrRain()){
+                player.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 220, 2, false, false, false));
+            }
+        }
 
         // ====================================effects immunity==========================================
         if (getPlayerClass((ServerPlayerEntity) player) == PlayerClass.INDIAN) {
