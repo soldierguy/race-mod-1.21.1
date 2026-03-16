@@ -1,0 +1,36 @@
+package net.un2rws1.racemod.item;
+
+import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
+import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemStack;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
+import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
+import net.un2rws1.racemod.Racemod;
+import net.un2rws1.racemod.block.ModBlocks;
+
+public class ModItemGroups {
+    public static final ItemGroup INDIAN_ITEM_GROUP = Registry.register(Registries.ITEM_GROUP,
+            Identifier.of(Racemod.MOD_ID, "indian_items"),
+            FabricItemGroup.builder().icon(() -> new ItemStack(ModItems.POOP))
+                    .displayName(Text.translatable("itemgroup.race-mod.indian_items"))
+                    .entries(((displayContext, entries) -> {
+                        entries.add(ModItems.POOP);
+                        entries.add(ModBlocks.POOP_BLOCK);
+                    }))
+                    .build());
+
+    public static final ItemGroup JEWISH_ITEM_GROUP = Registry.register(Registries.ITEM_GROUP,
+            Identifier.of(Racemod.MOD_ID, "jewish_items"),
+            FabricItemGroup.builder().icon(() -> new ItemStack(ModItems.RABBI_TOTEM))
+                    .displayName(Text.translatable("itemgroup.race-mod.jewish_items"))
+                    .entries(((displayContext, entries) -> {
+                        entries.add(ModItems.RABBI_TOTEM);
+                    }))
+                    .build());
+
+    public static void registerItemGroups() {
+        Racemod.LOGGER.info("Registering Item Groups for " + Racemod.MOD_ID);
+    }
+}

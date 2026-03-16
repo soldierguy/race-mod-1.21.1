@@ -1,5 +1,8 @@
 {
   "item.race-mod.poop": "Poop",
   "item.race-mod.rabbi_totem": "Rabbi Totem",
-  "block.race-mod.poop_block": "Poop Block"
+  "block.race-mod.poop_block": "Poop Block",
+
+  "itemgroup.race-mod.indian_items": "Indian Items",
+  "itemgroup.race-mod.jewish_items": "Jewish Items"
 }
