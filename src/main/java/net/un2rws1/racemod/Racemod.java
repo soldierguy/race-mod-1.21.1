@@ -2,8 +2,11 @@ package net.un2rws1.racemod;
 
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.un2rws1.racemod.block.ModBlocks;
 import net.un2rws1.racemod.classsystem.ClassAttachmentTypes;
+import net.un2rws1.racemod.classsystem.ClassManager;
 import net.un2rws1.racemod.command.ClassCommand;
 import net.un2rws1.racemod.event.PlayerJoinHandler;
 import net.un2rws1.racemod.item.ModItemGroups;
@@ -31,6 +34,13 @@ public class Racemod implements ModInitializer {
 		ModNetworking.register();
 		PlayerJoinHandler.register();
 		PlayerRespawnHandler.register();
+
+		//classes (races) buffs defuffs and whatnot
+		ServerTickEvents.END_SERVER_TICK.register(server -> {
+			for (ServerPlayerEntity player : server.getPlayerManager().getPlayerList()) {
+				ClassManager.tickPlayer(player);
+			}
+		});
 
 		CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) ->
 				ClassCommand.register(dispatcher));

@@ -1,5 +1,9 @@
 package net.un2rws1.racemod.classsystem;
 
+import net.minecraft.entity.effect.StatusEffect;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
+import net.minecraft.entity.player.PlayerEntity;
 import net.un2rws1.racemod.networking.OpenClassSelectionPayload;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.attribute.EntityAttributeInstance;
@@ -45,6 +49,16 @@ public final class ClassManager {
         Optional<PlayerClass> resolved = PlayerClass.byId(classId);
         return resolved.orElse(null);
     }
+
+    //buffs and all that
+
+    public static void tickPlayer(PlayerEntity player) {
+            if (getPlayerClass((ServerPlayerEntity) player) == PlayerClass.MEXICAN) {
+                player.addStatusEffect(new StatusEffectInstance(StatusEffects.HASTE, 220, 0, true, false));
+            }
+    }
+
+
 
 
     public static boolean canChooseClass(ServerPlayerEntity player) {
@@ -136,7 +150,7 @@ public final class ClassManager {
                 if (maxHealth != null && maxHealth.getModifier(HEALTH_MODIFIER_ID) == null) {
                     maxHealth.addPersistentModifier(new EntityAttributeModifier(
                             HEALTH_MODIFIER_ID,
-                            8.0,
+                            4,
                             EntityAttributeModifier.Operation.ADD_VALUE
                     ));
                 }
@@ -144,7 +158,7 @@ public final class ClassManager {
                 if (movementSpeed != null && movementSpeed.getModifier(SPEED_MODIFIER_ID) == null) {
                     movementSpeed.addPersistentModifier(new EntityAttributeModifier(
                             SPEED_MODIFIER_ID,
-                            -0.02,
+                            0.03,
                             EntityAttributeModifier.Operation.ADD_VALUE
                     ));
                 }
@@ -166,13 +180,6 @@ public final class ClassManager {
                     ));
                 }
 
-                if (movementSpeed != null && movementSpeed.getModifier(SPEED_MODIFIER_ID) == null) {
-                    movementSpeed.addPersistentModifier(new EntityAttributeModifier(
-                            SPEED_MODIFIER_ID,
-                            0.03,
-                            EntityAttributeModifier.Operation.ADD_VALUE
-                    ));
-                }
 
                 if (player.getHealth() > player.getMaxHealth()) {
                     player.setHealth(player.getMaxHealth());
@@ -195,8 +202,17 @@ public final class ClassManager {
                 }
             }
             case MEXICAN -> {
+                EntityAttributeInstance movementSpeed = player.getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED);
 
-                // No bonuses yet
+
+                if (movementSpeed != null && movementSpeed.getModifier(SPEED_MODIFIER_ID) == null) {
+                    movementSpeed.addPersistentModifier(new EntityAttributeModifier(
+                            SPEED_MODIFIER_ID,
+                            0.05,
+                            EntityAttributeModifier.Operation.ADD_VALUE
+                    ));
+                }
+
             }
 
 
@@ -226,5 +242,8 @@ public final class ClassManager {
             player.setHealth(player.getMaxHealth());
         }
     }
+
+
+
 
 }
