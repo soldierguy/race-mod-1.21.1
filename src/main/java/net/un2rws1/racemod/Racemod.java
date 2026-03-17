@@ -5,6 +5,8 @@ import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.minecraft.component.DataComponentTypes;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LightningEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -53,36 +55,37 @@ public class Racemod implements ModInitializer {
 		UseItemCallback.EVENT.register((player, world, hand) -> {
 			ItemStack stack = player.getStackInHand(hand);
 			PlayerClass playerClass = ClassManager.getPlayerClass(player);
-
 			Item item = stack.getItem();
 			if (stack.get(DataComponentTypes.FOOD) == null) {
 				return TypedActionResult.pass(stack);
 			}
-			if (playerClass == PlayerClass.JEW) {
-				if (	item == Items.PORKCHOP ||
-						item == Items.COOKED_PORKCHOP) {
+			if (playerClass == null) {
+					return TypedActionResult.pass(stack);
+			}
 
+			if (playerClass == PlayerClass.JEW) {
+				if(		item == Items.PORKCHOP ||
+						item == Items.COOKED_PORKCHOP) {
 					if (!world.isClient) {
 						player.sendMessage(Text.literal("You're a Jew"), true);
-					}
-
+						}
 					return TypedActionResult.fail(stack);
 				}
 			}
-			if (playerClass == PlayerClass.INDIAN){
-				if(		item == Items.BEEF ||
-						item == Items.COOKED_BEEF){
-					if(!world.isClient){
+			if (playerClass == PlayerClass.INDIAN) {
+				if (item == Items.BEEF ||
+					item == Items.COOKED_BEEF) {
+					if (!world.isClient) {
 						player.sendMessage(Text.literal("You're Indian, put that away"), true);
 					}
 					return TypedActionResult.fail(stack);
 				}
 			}
-			if (playerClass == PlayerClass.BLACK){
-				if(		item != Items.CHICKEN &&
-						item != Items.COOKED_CHICKEN &&
-						item != Items.MELON_SLICE){
-					if(!world.isClient){
+			if (playerClass == PlayerClass.BLACK) {
+				if (item != Items.CHICKEN &&
+					item != Items.COOKED_CHICKEN &&
+					item != Items.MELON_SLICE) {
+					if (!world.isClient) {
 						player.sendMessage(Text.literal("Yea you're black, stick to chicken and watermelon"), true);
 					}
 					return TypedActionResult.fail(stack);
@@ -92,11 +95,13 @@ public class Racemod implements ModInitializer {
 			return TypedActionResult.pass(stack);
 		});
 
+
 		CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) ->
 				ClassCommand.register(dispatcher));
 	}
-
 }
+
+
 
 
 

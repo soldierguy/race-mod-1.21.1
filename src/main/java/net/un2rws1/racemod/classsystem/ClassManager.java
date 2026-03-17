@@ -109,7 +109,6 @@ public final class ClassManager {
             boolean isMage = getPlayerClass((ServerPlayerEntity) player) == PlayerClass.CHINESE;
             boolean hasModifier = attribute.getModifier(ASIAN_DAMAGE_MODIFIER_ID) != null;
 
-            // Add modifier if Mage and not applied
             if (isMage && !hasModifier) {
                 attribute.addPersistentModifier(
                         new EntityAttributeModifier(
@@ -120,7 +119,6 @@ public final class ClassManager {
                 );
             }
 
-            // Remove modifier if NOT Mage but still applied
             if (!isMage && hasModifier) {
                 attribute.removeModifier(ASIAN_DAMAGE_MODIFIER_ID);
             }
