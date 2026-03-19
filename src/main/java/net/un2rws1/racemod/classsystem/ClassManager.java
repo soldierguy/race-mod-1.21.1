@@ -8,9 +8,8 @@ import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.nbt.NbtCompound;
+import net.minecraft.world.GameMode;
 import net.un2rws1.racemod.item.ModItems;
-import net.un2rws1.racemod.item.PoopItem;
 import net.un2rws1.racemod.networking.OpenClassSelectionPayload;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.attribute.EntityAttributeInstance;
@@ -19,9 +18,9 @@ import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import org.apache.logging.log4j.core.jmx.Server;
 import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
+
 
 
 public final class ClassManager {
@@ -70,10 +69,12 @@ public final class ClassManager {
     //==========================kippah must be always worn=================================
     public static ItemStack createKippah() {
         ItemStack stack = new ItemStack(ModItems.KIPPAH);
-
         stack.set(DataComponentTypes.UNBREAKABLE, new UnbreakableComponent(false));
-
         return stack;
+    }
+    public static boolean isJew(ServerPlayerEntity player) {
+        ClassState state = getState(player);
+        return state != null && "jew".equals(state.getSelectedClassId());
     }
     private static void ensureKippah(ServerPlayerEntity player) {
         PlayerClass playerClass = getPlayerClass(player);
@@ -121,7 +122,7 @@ public final class ClassManager {
     }
 
 
-
+//==================================tickPlayer method===================================
     public static void tickPlayer(PlayerEntity player) {
         PlayerClass playerClass = getPlayerClass((ServerPlayerEntity) player);
         //==============================================effects==================================================
@@ -152,6 +153,7 @@ public final class ClassManager {
         }
 
         //=====================================Other abilities (testing)==========================
+        // =================================================water slowness for blacks==========================
         if (getPlayerClass((ServerPlayerEntity) player) == PlayerClass.BLACK){
             if(player.isTouchingWaterOrRain()){
                 player.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 220, 2, false, false, false));
@@ -175,7 +177,6 @@ public final class ClassManager {
 
             state.setPoopTickTimer(timer);
         }
-
 
         // ====================================effects immunity==========================================
         if (getPlayerClass((ServerPlayerEntity) player) == PlayerClass.INDIAN) {

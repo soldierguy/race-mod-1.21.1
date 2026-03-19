@@ -4,18 +4,20 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.component.DataComponentTypes;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LightningEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.TypedActionResult;
+import net.minecraft.world.GameMode;
 import net.un2rws1.racemod.block.ModBlocks;
 import net.un2rws1.racemod.classsystem.ClassAttachmentTypes;
 import net.un2rws1.racemod.classsystem.ClassManager;
+import net.un2rws1.racemod.classsystem.ClassState;
 import net.un2rws1.racemod.classsystem.PlayerClass;
 import net.un2rws1.racemod.command.ClassCommand;
 import net.un2rws1.racemod.entity.ModEntities;
@@ -27,6 +29,8 @@ import net.un2rws1.racemod.sound.ModSounds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import net.un2rws1.racemod.event.PlayerRespawnHandler;
+
+import static net.un2rws1.racemod.classsystem.ClassManager.*;
 
 public class Racemod implements ModInitializer {
 	public static final String MOD_ID = "race-mod";
@@ -56,27 +60,27 @@ public class Racemod implements ModInitializer {
 		//classes food, you cant eat certain food
 		UseItemCallback.EVENT.register((player, world, hand) -> {
 			ItemStack stack = player.getStackInHand(hand);
-			PlayerClass playerClass = ClassManager.getPlayerClass(player);
+			PlayerClass playerClass = getPlayerClass(player);
 			Item item = stack.getItem();
 			if (stack.get(DataComponentTypes.FOOD) == null) {
 				return TypedActionResult.pass(stack);
 			}
 			if (playerClass == null) {
-					return TypedActionResult.pass(stack);
+				return TypedActionResult.pass(stack);
 			}
 
 			if (playerClass == PlayerClass.JEW) {
-				if(		item == Items.PORKCHOP ||
+				if (item == Items.PORKCHOP ||
 						item == Items.COOKED_PORKCHOP) {
 					if (!world.isClient) {
 						player.sendMessage(Text.literal("You're a Jew"), true);
-						}
+					}
 					return TypedActionResult.fail(stack);
 				}
 			}
 			if (playerClass == PlayerClass.INDIAN) {
 				if (item == Items.BEEF ||
-					item == Items.COOKED_BEEF) {
+						item == Items.COOKED_BEEF) {
 					if (!world.isClient) {
 						player.sendMessage(Text.literal("You're Indian, put that away"), true);
 					}
@@ -85,8 +89,8 @@ public class Racemod implements ModInitializer {
 			}
 			if (playerClass == PlayerClass.BLACK) {
 				if (item != Items.CHICKEN &&
-					item != Items.COOKED_CHICKEN &&
-					item != Items.MELON_SLICE) {
+						item != Items.COOKED_CHICKEN &&
+						item != Items.MELON_SLICE) {
 					if (!world.isClient) {
 						player.sendMessage(Text.literal("Yea you're black, stick to chicken and watermelon"), true);
 					}
@@ -96,13 +100,42 @@ public class Racemod implements ModInitializer {
 
 			return TypedActionResult.pass(stack);
 		});
-
-
+		//=============================shabbat====================================
+		ServerTickEvents.END_SERVER_TICK.register(server -> {
+			tickPlayers(server);
+		});
 		CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) ->
 				ClassCommand.register(dispatcher));
 	}
-}
 
+	// ===============================shabbat================================
+	public static void tickPlayers(MinecraftServer server) {
+		for (ServerPlayerEntity player : server.getPlayerManager().getPlayerList()) {
+			ClassState state = getState(player);
+			PlayerClass playerClass = getPlayerClass(player);
+
+			if (playerClass != PlayerClass.JEW) {
+				continue;
+			}
+
+			long day = (player.getServerWorld().getTimeOfDay() / 24000L) + 1;
+			boolean shouldBeAdventure = (day % 7 == 0);
+
+			if (shouldBeAdventure) {
+				if (player.interactionManager.getGameMode() != GameMode.ADVENTURE) {
+					player.changeGameMode(GameMode.ADVENTURE);
+					player.sendMessage(Text.literal("It is the Shabbot, you can't work."), false);
+				}
+			} else {
+				if (player.interactionManager.getGameMode() != GameMode.SURVIVAL) {
+					player.changeGameMode(GameMode.SURVIVAL);
+					player.sendMessage(Text.literal("The Shabbot has passed, you can work again"), false);
+				}
+			}
+
+		}
+	}
+}
 
 
 

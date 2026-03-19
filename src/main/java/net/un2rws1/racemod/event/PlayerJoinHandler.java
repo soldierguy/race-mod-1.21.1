@@ -1,5 +1,6 @@
 package net.un2rws1.racemod.event;
 
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.un2rws1.racemod.classsystem.ClassManager;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 
