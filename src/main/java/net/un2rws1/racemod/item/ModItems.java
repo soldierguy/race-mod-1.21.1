@@ -24,8 +24,7 @@ public class ModItems {
                     new Item.Settings().maxCount(1)
             )
     );
-//    public static final Item KIPPAH = registerItem("kippah", new ArmorItem(ArmorMaterials.LEATHER, ArmorItem.Type.HELMET,
-//            new Item.Settings().maxCount(1).maxDamage(0)));
+    public static final Item COOKED_POOP = registerItem("cooked_poop", new Item(new Item.Settings()));
     public static final Item RABBI_TOTEM = registerItem("rabbi_totem", new Item(new Item.Settings().maxCount(1)));
     public static final Item HAVA_NAGILA_MUSIC_DISC = registerItem("hava_nagila_music_disc",
             new Item(new Item.Settings().jukeboxPlayable(ModSounds.HAVA_NAGILA_KEY).maxCount(1)));

@@ -18,6 +18,8 @@ public class ModItemGroups {
                     .entries(((displayContext, entries) -> {
                         entries.add(ModItems.POOP);
                         entries.add(ModBlocks.POOP_BLOCK);
+                        entries.add(ModBlocks.POOP_COOKED_BLOCK);
+                        entries.add(ModItems.COOKED_POOP);
                     }))
                     .build());
 

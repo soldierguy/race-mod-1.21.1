@@ -14,9 +14,7 @@ import net.un2rws1.racemod.Racemod;
 
 public class ModBlocks {
 
-   // public static final Block POOP_BLOCK = registerBlock("poop_block",
-  //          new Block(AbstractBlock.Settings.create().strength(2f, 3f).requiresTool().sounds(BlockSoundGroup.MUD)));
-   public static final Block POOP_BLOCK =
+    public static final Block POOP_BLOCK =
            registerBlock("poop_block",
                    new Poop_Block(AbstractBlock.Settings.create()
                            .strength(2f, 3f).requiresTool()
@@ -26,6 +24,12 @@ public class ModBlocks {
                            .dynamicBounds()
                    )
            );
+   public static final Block POOP_COOKED_BLOCK = registerBlock("poop_cooked_block",
+           new Block(AbstractBlock.Settings.create()
+                   .strength(5f, 3f).requiresTool()
+                   .sounds(BlockSoundGroup.MUD_BRICKS)
+           )
+   );
 
 
     private static Block registerBlock(String name, Block block){
