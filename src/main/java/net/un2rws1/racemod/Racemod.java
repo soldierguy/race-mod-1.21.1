@@ -3,6 +3,7 @@ package net.un2rws1.racemod;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
@@ -111,9 +112,22 @@ public class Racemod implements ModInitializer {
 		ServerTickEvents.END_SERVER_TICK.register(server -> {
 			tickPlayers(server);
 		});
+		//==================================breaking blocks hungry jews==================
+		PlayerBlockBreakEvents.AFTER.register((world, player, pos, state, blockEntity) -> {
+			if (world.isClient()) return;
+			if (!(player instanceof ServerPlayerEntity serverPlayer)) return;
+
+			PlayerClass playerClass = ClassManager.getPlayerClass(serverPlayer);
+			if (playerClass == PlayerClass.JEW) {
+				serverPlayer.getHungerManager().addExhaustion(0.5f);
+			}
+		});
+
+
 		CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) ->
 				ClassCommand.register(dispatcher));
 	}
+
 
 	// ===============================shabbat================================
 	public static void tickPlayers(MinecraftServer server) {

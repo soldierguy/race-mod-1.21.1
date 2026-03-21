@@ -211,6 +211,42 @@ public final class ClassManager {
                 ));
             }
         }
+        // ==========================================nausea when still ====================================
+        if (playerClass == PlayerClass.MEXICAN) {
+            if (!player.isSprinting()) {
+                player.addStatusEffect(new StatusEffectInstance(
+                        StatusEffects.NAUSEA, 120, 0, true, false, false
+                ));
+            } else {
+                player.removeStatusEffect(StatusEffects.NAUSEA);
+            }
+        } else {
+            player.removeStatusEffect(StatusEffects.NAUSEA);
+        }
+        // ===========================================invis and blindness at night =======================
+        if (playerClass == PlayerClass.BLACK) {
+            long time = player.getWorld().getTimeOfDay() % 24000;
+            boolean isNight = time >= 13000 && time <= 23000;
+
+            if (isNight && !player.isSleeping()) {
+                player.addStatusEffect(new StatusEffectInstance(
+                        StatusEffects.INVISIBILITY, 40, 0, true, false, false
+                ));
+
+                player.addStatusEffect(new StatusEffectInstance(
+                        StatusEffects.BLINDNESS, 40, 0, true, false, false
+                ));
+            } else {
+                player.removeStatusEffect(StatusEffects.INVISIBILITY);
+                player.removeStatusEffect(StatusEffects.BLINDNESS);
+            }
+        }
+        //============================================hungry when running =====================
+        if (playerClass == PlayerClass.JEW) {
+            if (player.age % 10 == 0 && player.isSprinting()) {
+                player.getHungerManager().addExhaustion(0.5f);
+            }
+        }
 
         // ====================================effects immunity==========================================
         if (getPlayerClass((ServerPlayerEntity) player) == PlayerClass.INDIAN) {
