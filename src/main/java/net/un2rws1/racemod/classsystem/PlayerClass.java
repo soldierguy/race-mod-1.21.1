@@ -25,6 +25,15 @@ public enum PlayerClass {
     public String getDisplayName() { return displayName; }
     public String getDescription() { return description; }
 
+    public static PlayerClass fromId(String id) {
+        for (PlayerClass value : values()) {
+            if (value.id.equalsIgnoreCase(id)) {
+                return value;
+            }
+        }
+        return null;
+    }
+
     public static Optional<PlayerClass> byId(String id) {
         return Arrays.stream(values())
                 .filter(c -> c.id.equals(id))

@@ -4,6 +4,7 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
+import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.item.Item;
@@ -25,6 +26,7 @@ import net.un2rws1.racemod.event.PlayerJoinHandler;
 import net.un2rws1.racemod.item.ModItemGroups;
 import net.un2rws1.racemod.item.ModItems;
 import net.un2rws1.racemod.networking.ModNetworking;
+import net.un2rws1.racemod.networking.SyncClassPayload;
 import net.un2rws1.racemod.sound.ModSounds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,6 +59,11 @@ public class Racemod implements ModInitializer {
 				ClassManager.tickPlayer(player);
 			}
 		});
+		//==============coin slot eye==============
+		PayloadTypeRegistry.playS2C().register(
+				SyncClassPayload.ID,
+				SyncClassPayload.CODEC
+		);
 		//classes food, you cant eat certain food
 		UseItemCallback.EVENT.register((player, world, hand) -> {
 			ItemStack stack = player.getStackInHand(hand);

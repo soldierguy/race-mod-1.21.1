@@ -8,7 +8,6 @@ import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.world.GameMode;
 import net.un2rws1.racemod.item.ModItems;
 import net.un2rws1.racemod.networking.OpenClassSelectionPayload;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -18,6 +17,7 @@ import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import net.un2rws1.racemod.networking.SyncClassPayload;
 import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
 
@@ -247,6 +247,8 @@ public final class ClassManager {
             }
         }
         applyClassEffects(player, chosenClass);
+        System.out.println("[RaceMod] Sending race sync: " + chosenClass.getId());
+        ServerPlayNetworking.send(player, new SyncClassPayload(chosenClass.getId()));
 
 
         player.sendMessage(Text.literal("You are now " + chosenClass.getDisplayName() ), false);
@@ -266,6 +268,7 @@ public final class ClassManager {
             }
         }
         applyClassEffects(player, newClass);
+
 
         player.sendMessage(Text.literal("Your race has been set to " + newClass.getDisplayName() + "."), false);
     }
@@ -298,7 +301,6 @@ public final class ClassManager {
 
     public static void refreshCurrentClassEffects(ServerPlayerEntity player) {
         PlayerClass playerClass = getPlayerClass(player);
-
         float oldMaxHealth = player.getMaxHealth();
         float oldHealth = player.getHealth();
         float healthPercent = oldMaxHealth > 0.0f ? oldHealth / oldMaxHealth : 1.0f;
