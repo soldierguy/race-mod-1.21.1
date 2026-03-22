@@ -5,10 +5,11 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LightningEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.mob.PillagerEntity;
+import net.minecraft.entity.mob.*;
 import net.minecraft.entity.passive.CowEntity;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.passive.PigEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.registry.tag.DamageTypeTags;
 import net.minecraft.registry.tag.EntityTypeTags;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -107,4 +108,31 @@ public class LivingEntityMixin {
 
         return amount;
     }
+    @Inject(
+            method = "canTarget(Lnet/minecraft/entity/LivingEntity;)Z",
+            at = @At("HEAD"),
+            cancellable = true
+    )
+    private void racemod$blockAggro(LivingEntity target, CallbackInfoReturnable<Boolean> cir) {
+        LivingEntity self = (LivingEntity) (Object) this;
+
+        if (!(self instanceof MobEntity mob)) return;
+        if (!(target instanceof PlayerEntity player)) return;
+
+        PlayerClass playerClass = ClassManager.getPlayerClass(player);
+        if (mob instanceof PiglinEntity && playerClass == PlayerClass.JEW) {
+            cir.setReturnValue(false);
+            return;
+        }
+        if (mob instanceof HoglinEntity && playerClass == PlayerClass.JEW) {
+            cir.setReturnValue(false);
+        }
+        if (mob instanceof PiglinBruteEntity && playerClass == PlayerClass.JEW) {
+            cir.setReturnValue(false);
+        }
+    }
+
+
+
+
 }

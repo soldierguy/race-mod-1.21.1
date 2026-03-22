@@ -11,7 +11,11 @@
 		"ScreenHandlerMixin",
 		"PlayerEntityMixin",
 		"ServerPlayerInteractionManagerMixin",
-		"FallingBlockEntityMixin"
+		"FallingBlockEntityMixin",
+		"EndermanEntityMixin",
+		"PiglinBrainMixin",
+		"PiglinEntityMixin",
+		"PiglinInteractMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1
