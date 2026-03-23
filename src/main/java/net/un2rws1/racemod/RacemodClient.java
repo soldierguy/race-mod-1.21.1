@@ -42,13 +42,12 @@ public class RacemodClient implements ClientModInitializer{
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             while (stealKey.wasPressed()) {
                 if (client.player == null || client.world == null) return;
+                int targetId = -1;
                 Entity hit = client.targetedEntity;
-                if (!(hit instanceof PlayerEntity targetPlayer)) {
-                    client.player.sendMessage(Text.literal("Look at a player to steal from."), true);
-                    continue;
+                if (hit instanceof PlayerEntity target) {
+                    targetId = target.getId();
                 }
-
-                ClientPlayNetworking.send(new StealAttemptPayload(targetPlayer.getUuid()));
+                ClientPlayNetworking.send(new StealAttemptPayload(targetId));
             }
         });
 

@@ -6,15 +6,15 @@ import net.minecraft.network.packet.CustomPayload;
 import net.minecraft.util.Identifier;
 import net.un2rws1.racemod.Racemod;
 
-public record StealAttemptPayload(java.util.UUID targetUuid) implements CustomPayload {
+public record StealAttemptPayload(int targetEntityId) implements CustomPayload {
 
     public static final Id<StealAttemptPayload> ID =
             new Id<>(Identifier.of(Racemod.MOD_ID, "steal_attempt"));
 
     public static final PacketCodec<RegistryByteBuf, StealAttemptPayload> CODEC =
             PacketCodec.of(
-                    (payload, buf) -> buf.writeUuid(payload.targetUuid()),
-                    buf -> new StealAttemptPayload(buf.readUuid())
+                    (payload, buf) -> buf.writeInt(payload.targetEntityId()),
+                    buf -> new StealAttemptPayload(buf.readInt())
             );
 
     @Override

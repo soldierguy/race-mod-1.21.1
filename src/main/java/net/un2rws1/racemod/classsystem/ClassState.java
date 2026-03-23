@@ -49,6 +49,15 @@ public class ClassState
     private UUID stealTargetUuid = null;
     private long stealStartTick = -1L;
     private BlockPos stealTargetStartPos = null;
+    private int stealTargetEntityId = -1;
+
+    public int getStealTargetEntityId() {
+        return stealTargetEntityId;
+    }
+
+    public void setStealTargetEntityId(int stealTargetEntityId) {
+        this.stealTargetEntityId = stealTargetEntityId;
+    }
 
     public long getLastStealTime() {
         return lastStealTime;
@@ -83,7 +92,7 @@ public class ClassState
     }
 
     public void clearStealAttempt() {
-        this.stealTargetUuid = null;
+        this.stealTargetEntityId = -1;
         this.stealStartTick = -1L;
         this.stealTargetStartPos = null;
     }

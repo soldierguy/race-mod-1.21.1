@@ -9,6 +9,7 @@ import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.Blocks;
 import net.minecraft.component.DataComponentTypes;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
@@ -20,6 +21,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.GameMode;
@@ -87,7 +89,7 @@ public class Racemod implements ModInitializer {
 				(payload, context) -> {
 					ServerPlayerEntity player = context.player();
 					context.server().execute(() -> {
-						handleStealAttempt(player, payload.targetUuid());
+						handleStealAttempt(player, payload.targetEntityId());
 					});
 				}
 		);
@@ -260,27 +262,31 @@ public class Racemod implements ModInitializer {
 	public static final long STEAL_COOLDOWN_TICKS = 24000L;
 	public static final long STEAL_CHANNEL_TICKS = 40L;
 	public static final double STEAL_RANGE = 3.0;
-	public static void handleStealAttempt(ServerPlayerEntity thief, UUID targetUuid) {
+	public static void handleStealAttempt(ServerPlayerEntity thief, int targetEntityId) {
 		if (thief.getServerWorld().isClient()) return;
 		ClassState thiefState = getState(thief);
 		PlayerClass thiefClass = PlayerClass.fromId(thiefState.getSelectedClassId());
 		if (thiefClass != PlayerClass.BLACK) {
-			thief.sendMessage(Text.literal("Only Blacks can steal."), true);
 			return;
 		}
 		long now = thief.getServerWorld().getTime();
 		long lastSteal = thiefState.getLastStealTime();
-		if (now - lastSteal < STEAL_COOLDOWN_TICKS) {
-			thief.sendMessage(Text.literal("Calm down, we know you're can't fight it but there's a cool down."), true);
+		long remaining = STEAL_COOLDOWN_TICKS - (now - lastSteal);
+		if (remaining > 0) {
+			thief.sendMessage(Text.literal("Stealing is still on cooldown for " + formatStealCooldown(remaining) + "."), true);
 			return;
 		}
-		ServerPlayerEntity target = thief.getServer().getPlayerManager().getPlayer(targetUuid);
-		if (target == null || target == thief) {
-			thief.sendMessage(Text.literal("Invalid target."), true);
+		if (now - lastSteal < STEAL_COOLDOWN_TICKS) {
+			thief.sendMessage(Text.literal("Calm down, we know you can't control your impulse but there is a cool down."), true);
+			return;
+		}
+		Entity entity = thief.getServerWorld().getEntityById(targetEntityId);
+		if (!(entity instanceof ServerPlayerEntity target) || target == thief) {
+			thief.sendMessage(Text.literal("You can't steal from nothing, go rob a player"), true);
 			return;
 		}
 		if (target.isSpectator() || target.isCreative()) {
-			thief.sendMessage(Text.literal("You can't steal from that player."), true);
+			thief.sendMessage(Text.literal("You can't steal from Master"), true);
 			return;
 		}
 		if (thief.squaredDistanceTo(target) > STEAL_RANGE * STEAL_RANGE) {
@@ -288,28 +294,28 @@ public class Racemod implements ModInitializer {
 			return;
 		}
 		if (thiefState.getStealTargetUuid() != null) {
-			thief.sendMessage(Text.literal("You are already stealing."), true);
+			thief.sendMessage(Text.literal("You are already stealing, chill out"), true);
 			return;
 		}
 		thiefState.setStealTargetUuid(target.getUuid());
 		thiefState.setStealStartTick(now);
 		thiefState.setStealTargetStartPos(target.getBlockPos());
-		thief.sendMessage(Text.literal("Stealing... don't let them move."), true);
+		thief.sendMessage(Text.literal("Doing what you do best, now make sure they don't move"), true);
 	}
 
 
 	private static void tickThiefSteal(ServerPlayerEntity thief, ClassState state) {
-		UUID targetUuid = state.getStealTargetUuid();
-		if (targetUuid == null) return;
+		int targetId = state.getStealTargetEntityId();
+		if (targetId == -1) return;
 
-		ServerPlayerEntity target = thief.getServer().getPlayerManager().getPlayer(targetUuid);
-		if (target == null) {
+		Entity entity = thief.getServerWorld().getEntityById(targetId);
+		if (!(entity instanceof ServerPlayerEntity target)) {
 			state.clearStealAttempt();
 			return;
 		}
 		long now = thief.getServerWorld().getTime();
 		if (thief.squaredDistanceTo(target) > STEAL_RANGE * STEAL_RANGE) {
-			thief.sendMessage(Text.literal("Steal failed: too far away."), true);
+			thief.sendMessage(Text.literal("Steal failed: you moved too far"), true);
 			state.clearStealAttempt();
 			return;
 		}
@@ -342,19 +348,38 @@ public class Racemod implements ModInitializer {
 			validSlots.add(slot);
 		}
 		if (validSlots.isEmpty()) {
-			thief.sendMessage(Text.literal("Steal failed: target has nothing to steal."), true);
+			thief.sendMessage(Text.literal("Steal failed: target is broke, you're not Jewish so taking pennies isn't your thing"), true);
 			return false;
 		}
 		int chosenSlot = validSlots.get(thief.getRandom().nextInt(validSlots.size()));
 		ItemStack targetStack = inv.getStack(chosenSlot);
 		ItemStack stolen = targetStack.split(1);
+		ItemStack displayStack = stolen.copy();
 		boolean inserted = thief.getInventory().insertStack(stolen);
 		if (!inserted) {
 			thief.dropItem(stolen, false);
 		}
-		thief.sendMessage(Text.literal("You stole " + stolen.getName().getString() + "!"), true);
-		target.sendMessage(Text.literal("A thief stole from you!"), true);
+		String itemName = displayStack.getName().getString();
+		String targetName = target.getName().getString();
+		thief.sendMessage(Text.literal("You stole ")
+				.append(Text.literal(itemName).formatted(Formatting.GOLD))
+				.append(Text.literal(" from "))
+				.append(Text.literal(targetName).formatted(Formatting.DARK_GRAY))
+				.append(Text.literal("!")), true);
+		target.sendMessage(Text.literal("A ")
+				.append(Text.literal("BLACK").formatted(Formatting.BLACK))
+				.append(Text.literal(" from you! CALL THE IRON GOLEM!!")), true);
 		return true;
+	}
+	private static String formatStealCooldown(long ticks) {
+		int totalSeconds = (int) Math.ceil(ticks / 20.0);
+		int minutes = totalSeconds / 60;
+		int seconds = totalSeconds % 60;
+
+		if (minutes > 0) {
+			return minutes + "m " + seconds + "s";
+		}
+		return seconds + "s";
 	}
 
 }
