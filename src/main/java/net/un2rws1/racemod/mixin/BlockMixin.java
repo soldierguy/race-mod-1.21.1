@@ -27,7 +27,7 @@ public abstract class BlockMixin {
             at = @At("RETURN"),
             cancellable = true
     )
-    private void racemod$extraMageCropDrops(
+    private void racemod$extraChineseCropDrops(
             BlockState state,
             LootContextParameterSet.Builder builder,
             CallbackInfoReturnable<List<ItemStack>> cir

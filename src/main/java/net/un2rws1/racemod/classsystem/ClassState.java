@@ -53,14 +53,19 @@ public class ClassState
     public NbtCompound writeNbt() {
         NbtCompound nbt = new NbtCompound();
         nbt.putLong("lastJewInterestDay", lastJewsInterestDay);
+        nbt.putLong("LastChineseOverhealDecayTime", lastChineseOverhealDecayTime);
         return nbt;
     }
 
     public void readNbt(NbtCompound nbt) {
         if (nbt.contains("lastJewInterestDay")) {
             lastJewsInterestDay = nbt.getLong("lastJewInterestDay");
+            lastChineseOverhealDecayTime = nbt.getLong("LastChineseOverhealDecayTime");
         }
     }
+    //================================overheal chinese====================================
+    public long lastChineseOverhealDecayTime = 0L;
+
 
 }
 

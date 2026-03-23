@@ -6,9 +6,11 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
+import net.minecraft.block.Blocks;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -34,6 +36,10 @@ import net.un2rws1.racemod.sound.ModSounds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import net.un2rws1.racemod.event.PlayerRespawnHandler;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 import static net.un2rws1.racemod.classsystem.ClassManager.*;
 
@@ -120,7 +126,7 @@ public class Racemod implements ModInitializer {
 		ServerTickEvents.END_SERVER_TICK.register(server -> {
 			tickPlayers(server);
 		});
-		//==================================breaking blocks hungry jews==================
+		//==================================brekaing blocks mechanics==================
 		PlayerBlockBreakEvents.AFTER.register((world, player, pos, state, blockEntity) -> {
 			if (world.isClient()) return;
 			if (!(player instanceof ServerPlayerEntity serverPlayer)) return;
@@ -129,6 +135,15 @@ public class Racemod implements ModInitializer {
 			if (playerClass == PlayerClass.JEW) {
 				serverPlayer.getHungerManager().addExhaustion(0.1f);
 			}
+			//==================================blacks break bedrock (its cooked, maybe patch 2.0)===============================
+	/*		if (state.isOf(Blocks.BEDROCK) && getPlayerClass(player) == PlayerClass.BLACK) {
+				player.getHungerManager().setFoodLevel(0);
+				player.getHungerManager().setSaturationLevel(0.0f);
+				player.addStatusEffect(new StatusEffectInstance(StatusEffects.MINING_FATIGUE, 2400, 2, false, true));
+				player.sendMessage(Text.literal("Breaking bedrock drained all your energy, go eat some watermelon and chicken."), true);
+			}
+
+	*/
 		});
 		CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) ->
 				ClassCommand.register(dispatcher));
@@ -167,6 +182,8 @@ public class Racemod implements ModInitializer {
 	//==================tick player serverentity player
 	private static void tickPlayer(ServerPlayerEntity player) {
 		PlayerClass playerClass = ClassManager.getPlayerClass(player);
+		ClassState state = getState(player);
+
 		if (playerClass == PlayerClass.JEW) {
 			handleJewInterestReward(player);
 		}
@@ -219,8 +236,7 @@ public class Racemod implements ModInitializer {
 
 		state.setLastJewsIntersetDay(currentDay);
 	}
-
-
+	// ===========================blacks break bedrock=============================
 }
 
 

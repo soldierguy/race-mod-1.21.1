@@ -17,7 +17,10 @@
 		"PiglinEntityMixin",
 		"PiglinInteractMixin",
 		"client.InGameHudMixin",
-		"BlockMixin"
+		"BlockMixin",
+		"EntityMountMixin",
+		"BedrockBreakMixin",
+		"EnchantingTableBlockMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

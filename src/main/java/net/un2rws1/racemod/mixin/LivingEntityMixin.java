@@ -55,15 +55,6 @@ public class LivingEntityMixin {
             cir.setReturnValue(false);
             return;
         }
-
-        // jews cannot damage pigs
-        if (entity instanceof PigEntity && playerClass == PlayerClass.JEW) {
-                player.sendMessage(Text.literal("You're a Jew"), true);
-                cir.setReturnValue(false);
-                return;
-            }
-
-
         // Indians cannot damage cows
         if (entity instanceof CowEntity && playerClass == PlayerClass.INDIAN) {
                 if (!player.getWorld().isClient()) {
@@ -143,7 +134,7 @@ public class LivingEntityMixin {
     }
  // =================================== extra meat ==========================
  @Inject(method = "dropLoot", at = @At("TAIL"))
-        private void racemod$mageExtraDrops(DamageSource source, boolean causedByPlayer, CallbackInfo ci) {
+        private void racemod$ChineseExtraDrops(DamageSource source, boolean causedByPlayer, CallbackInfo ci) {
      LivingEntity entity = (LivingEntity) (Object) this;
      if (!(entity.getWorld() instanceof ServerWorld world)) return;
      if (!(entity instanceof AnimalEntity)) return;
