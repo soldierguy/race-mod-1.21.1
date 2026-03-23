@@ -6,11 +6,13 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.Blocks;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -19,6 +21,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.TypedActionResult;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.GameMode;
 import net.un2rws1.racemod.block.ModBlocks;
 import net.un2rws1.racemod.classsystem.ClassAttachmentTypes;
@@ -31,15 +34,14 @@ import net.un2rws1.racemod.event.PlayerJoinHandler;
 import net.un2rws1.racemod.item.ModItemGroups;
 import net.un2rws1.racemod.item.ModItems;
 import net.un2rws1.racemod.networking.ModNetworking;
+import net.un2rws1.racemod.networking.StealAttemptPayload;
 import net.un2rws1.racemod.networking.SyncClassPayload;
 import net.un2rws1.racemod.sound.ModSounds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import net.un2rws1.racemod.event.PlayerRespawnHandler;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 import static net.un2rws1.racemod.classsystem.ClassManager.*;
 
@@ -50,6 +52,7 @@ public class Racemod implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
+
 
 		ModItemGroups.registerItemGroups();
 		ModItems.registerModItems();
@@ -74,6 +77,21 @@ public class Racemod implements ModInitializer {
 				tickPlayer(player);
 			}
 		});
+		//====================== stealing ==============
+		PayloadTypeRegistry.playC2S().register(
+				StealAttemptPayload.ID,
+				StealAttemptPayload.CODEC
+		);
+		ServerPlayNetworking.registerGlobalReceiver(
+				StealAttemptPayload.ID,
+				(payload, context) -> {
+					ServerPlayerEntity player = context.player();
+					context.server().execute(() -> {
+						handleStealAttempt(player, payload.targetUuid());
+					});
+				}
+		);
+
 		//==============coin slot eye==============
 		PayloadTypeRegistry.playS2C().register(
 				SyncClassPayload.ID,
@@ -183,9 +201,11 @@ public class Racemod implements ModInitializer {
 	private static void tickPlayer(ServerPlayerEntity player) {
 		PlayerClass playerClass = ClassManager.getPlayerClass(player);
 		ClassState state = getState(player);
-
 		if (playerClass == PlayerClass.JEW) {
 			handleJewInterestReward(player);
+		}
+		if (playerClass == PlayerClass.BLACK) {
+			tickThiefSteal(player, state);
 		}
 	}
 	private static int countItem(ServerPlayerEntity player, Item item) {
@@ -236,7 +256,107 @@ public class Racemod implements ModInitializer {
 
 		state.setLastJewsIntersetDay(currentDay);
 	}
-	// ===========================blacks break bedrock=============================
+	// ===========================stealing=============================
+	public static final long STEAL_COOLDOWN_TICKS = 24000L;
+	public static final long STEAL_CHANNEL_TICKS = 40L;
+	public static final double STEAL_RANGE = 3.0;
+	public static void handleStealAttempt(ServerPlayerEntity thief, UUID targetUuid) {
+		if (thief.getServerWorld().isClient()) return;
+		ClassState thiefState = getState(thief);
+		PlayerClass thiefClass = PlayerClass.fromId(thiefState.getSelectedClassId());
+		if (thiefClass != PlayerClass.BLACK) {
+			thief.sendMessage(Text.literal("Only Blacks can steal."), true);
+			return;
+		}
+		long now = thief.getServerWorld().getTime();
+		long lastSteal = thiefState.getLastStealTime();
+		if (now - lastSteal < STEAL_COOLDOWN_TICKS) {
+			thief.sendMessage(Text.literal("Calm down, we know you're can't fight it but there's a cool down."), true);
+			return;
+		}
+		ServerPlayerEntity target = thief.getServer().getPlayerManager().getPlayer(targetUuid);
+		if (target == null || target == thief) {
+			thief.sendMessage(Text.literal("Invalid target."), true);
+			return;
+		}
+		if (target.isSpectator() || target.isCreative()) {
+			thief.sendMessage(Text.literal("You can't steal from that player."), true);
+			return;
+		}
+		if (thief.squaredDistanceTo(target) > STEAL_RANGE * STEAL_RANGE) {
+			thief.sendMessage(Text.literal("You are too far away to steal."), true);
+			return;
+		}
+		if (thiefState.getStealTargetUuid() != null) {
+			thief.sendMessage(Text.literal("You are already stealing."), true);
+			return;
+		}
+		thiefState.setStealTargetUuid(target.getUuid());
+		thiefState.setStealStartTick(now);
+		thiefState.setStealTargetStartPos(target.getBlockPos());
+		thief.sendMessage(Text.literal("Stealing... don't let them move."), true);
+	}
+
+
+	private static void tickThiefSteal(ServerPlayerEntity thief, ClassState state) {
+		UUID targetUuid = state.getStealTargetUuid();
+		if (targetUuid == null) return;
+
+		ServerPlayerEntity target = thief.getServer().getPlayerManager().getPlayer(targetUuid);
+		if (target == null) {
+			state.clearStealAttempt();
+			return;
+		}
+		long now = thief.getServerWorld().getTime();
+		if (thief.squaredDistanceTo(target) > STEAL_RANGE * STEAL_RANGE) {
+			thief.sendMessage(Text.literal("Steal failed: too far away."), true);
+			state.clearStealAttempt();
+			return;
+		}
+		BlockPos startPos = state.getStealTargetStartPos();
+		if (startPos == null || !target.getBlockPos().equals(startPos)) {
+			thief.sendMessage(Text.literal("Steal failed: target moved."), true);
+			state.clearStealAttempt();
+			return;
+		}
+		if (thief.hurtTime > 0) {
+			thief.sendMessage(Text.literal("Steal failed: you were interrupted."), true);
+			state.clearStealAttempt();
+			return;
+		}
+		if (now - state.getStealStartTick() >= STEAL_CHANNEL_TICKS) {
+			boolean success = stealRandomItem(thief, target);
+			if (success) {
+				state.setLastStealTime(now);
+			}
+			state.clearStealAttempt();
+		}
+
+	}
+	private static boolean stealRandomItem(ServerPlayerEntity thief, ServerPlayerEntity target) {
+		PlayerInventory inv = target.getInventory();
+		List<Integer> validSlots = new ArrayList<>();
+		for (int slot = 0; slot < inv.size(); slot++) {
+			ItemStack stack = inv.getStack(slot);
+			if (stack.isEmpty()) continue;
+			validSlots.add(slot);
+		}
+		if (validSlots.isEmpty()) {
+			thief.sendMessage(Text.literal("Steal failed: target has nothing to steal."), true);
+			return false;
+		}
+		int chosenSlot = validSlots.get(thief.getRandom().nextInt(validSlots.size()));
+		ItemStack targetStack = inv.getStack(chosenSlot);
+		ItemStack stolen = targetStack.split(1);
+		boolean inserted = thief.getInventory().insertStack(stolen);
+		if (!inserted) {
+			thief.dropItem(stolen, false);
+		}
+		thief.sendMessage(Text.literal("You stole " + stolen.getName().getString() + "!"), true);
+		target.sendMessage(Text.literal("A thief stole from you!"), true);
+		return true;
+	}
+
 }
 
 
