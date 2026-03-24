@@ -7,12 +7,9 @@ import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.block.Blocks;
+import net.fabricmc.fabric.api.registry.FabricBrewingRecipeRegistryBuilder;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -57,17 +54,15 @@ public class Racemod implements ModInitializer {
 
 
 		ModItemGroups.registerItemGroups();
-		ModItems.registerModItems();
 		ModBlocks.registerModBlocks();
 		ModSounds.registerSounds();
 		ModEntities.register();
-
+		ModItems.registerModItems();
 		//Classes (races)
 		ClassAttachmentTypes.init();
 		ModNetworking.register();
 		PlayerJoinHandler.register();
 		PlayerRespawnHandler.register();
-
 		//classes (races) buffs debuffs and whatnot
 		ServerTickEvents.END_SERVER_TICK.register(server -> {
 			for (ServerPlayerEntity player : server.getPlayerManager().getPlayerList()) {
@@ -110,10 +105,27 @@ public class Racemod implements ModInitializer {
 			if (playerClass == null) {
 				return TypedActionResult.pass(stack);
 			}
+			if (playerClass != PlayerClass.INDIAN){
+				if(item == ModItems.COOKED_POOP){
+					if(!world.isClient) {
+						player.sendMessage(Text.literal("Only Indians can eat this"), true);
+					}
+					return TypedActionResult.fail(stack);
+				}
 
+			}
+			if (playerClass != PlayerClass.BLACK){
+				if(item == ModItems.KOOL_AID){
+					if(!world.isClient) {
+						player.sendMessage(Text.literal("Only Blacks can consume this"), true);
+					}
+					return TypedActionResult.fail(stack);
+				}
+
+			}
 			if (playerClass == PlayerClass.JEW) {
 				if (item == Items.PORKCHOP ||
-						item == Items.COOKED_PORKCHOP) {
+						item == Items.COOKED_PORKCHOP){
 					if (!world.isClient) {
 						player.sendMessage(Text.literal("You're a Jew"), true);
 					}
@@ -132,9 +144,10 @@ public class Racemod implements ModInitializer {
 			if (playerClass == PlayerClass.BLACK) {
 				if (item != Items.CHICKEN &&
 						item != Items.COOKED_CHICKEN &&
-						item != Items.MELON_SLICE) {
+						item != Items.MELON_SLICE &&
+						item != ModItems.KOOL_AID) {
 					if (!world.isClient) {
-						player.sendMessage(Text.literal("Yea you're black, stick to chicken and watermelon"), true);
+						player.sendMessage(Text.literal("Yea you're black, stick to chicken, watermelon and Kool aid"), true);
 					}
 					return TypedActionResult.fail(stack);
 				}
@@ -349,7 +362,8 @@ public class Racemod implements ModInitializer {
 		}
 		int chosenSlot = validSlots.get(thief.getRandom().nextInt(validSlots.size()));
 		ItemStack targetStack = inv.getStack(chosenSlot);
-		ItemStack stolen = targetStack.split(1);
+	//	ItemStack stolen = targetStack.split(1);
+		ItemStack stolen = targetStack.copy();
 		ItemStack displayStack = stolen.copy();
 		boolean inserted = thief.getInventory().insertStack(stolen);
 		if (!inserted) {

@@ -20,7 +20,9 @@
 		"BlockMixin",
 		"EntityMountMixin",
 		"BedrockBreakMixin",
-		"EnchantingTableBlockMixin"
+		"EnchantingTableBlockMixin",
+		"BrewingStandBlockEntityMixin",
+		"BrewingStandIngredientSlotMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

@@ -6,6 +6,7 @@
   "item.race-mod.kippah": "Kippah",
   "item.race-mod.cooked_poop": "Cooked Poop",
   "item.race-mod.brick_poop": "Poop Brick",
+  "item.race-mod.kool_aid" : "Kool Aid",
 
   "block.race-mod.poop_block": "Poop Block",
   "block.race-mod.poop_cooked_block": "Cooked Poop Block",
@@ -13,6 +14,7 @@
 
   "itemgroup.race-mod.indian_items": "Indian Items",
   "itemgroup.race-mod.jewish_items": "Jewish Items",
+  "itemgroup.race-mod.black_items": "Black Items",
 
   "death.attack.crushed_by_brick_poop_block": "%1$s was flattened by POOP?!?!?!",
   "death.attack.crushed_by_brick_poop_block.player": "%1$s was flattened by %2$s's POOP?!??!"

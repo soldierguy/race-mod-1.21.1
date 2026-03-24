@@ -18,9 +18,10 @@ public class ModItemGroups {
                     .entries(((displayContext, entries) -> {
                         entries.add(ModItems.POOP);
                         entries.add(ModBlocks.POOP_BLOCK);
-                        entries.add(ModBlocks.POOP_COOKED_BLOCK);
                         entries.add(ModItems.COOKED_POOP);
+                        entries.add(ModBlocks.POOP_COOKED_BLOCK);
                         entries.add(ModItems.POOP_BRICK);
+                        entries.add(ModBlocks.BRICK_POOP_BLOCK);
                     }))
                     .build());
 
@@ -32,6 +33,14 @@ public class ModItemGroups {
                         entries.add(ModItems.RABBI_TOTEM);
                         entries.add(ModItems.HAVA_NAGILA_MUSIC_DISC);
                         entries.add(ModItems.KIPPAH);
+                    }))
+                    .build());
+    public static final ItemGroup BLACK_ITEM_GROUP = Registry.register(Registries.ITEM_GROUP,
+            Identifier.of(Racemod.MOD_ID, "black_items"),
+            FabricItemGroup.builder().icon(() -> new ItemStack(ModItems.KOOL_AID))
+                    .displayName(Text.translatable("itemgroup.race-mod.black_items"))
+                    .entries(((displayContext, entries) -> {
+                        entries.add(ModItems.KOOL_AID);
                     }))
                     .build());
 

@@ -51,7 +51,7 @@ public class LivingEntityMixin {
 
         // blacks cannot damage iron golems
         if (entity instanceof IronGolemEntity && playerClass == PlayerClass.BLACK) {
-            player.sendMessage(Text.literal("You can't breath"), true);
+            player.sendMessage(Text.literal("Yea nt"), true);
             cir.setReturnValue(false);
             return;
         }
