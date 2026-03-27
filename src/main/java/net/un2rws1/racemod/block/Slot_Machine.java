@@ -94,10 +94,10 @@ public class Slot_Machine extends Block {
             int payout = Math.max(1, Math.round(bet * randomBetween(random, 0.5f, 1.25f)));
             return new SlotResult(payout, false);
         } else if (roll < 900) {
-            int payout = Math.max(1, Math.round(bet * randomBetween(random, 1.5f, 2.5f)));
+            int payout = Math.max(1, Math.round(bet * randomBetween(random, 1.5f, 2.0f)));
             return new SlotResult(payout, false);
         } else if (roll < 995) {
-            int payout = Math.max(1, Math.round(bet * randomBetween(random, 3.0f, 5.0f)));
+            int payout = Math.max(1, Math.round(bet * randomBetween(random, 2.0f, 2.5f)));
             return new SlotResult(payout, false);
         } else {
             int payout = Math.max(1, Math.round(bet * randomBetween(random, 10.0f, 50.0f)));
