@@ -33,6 +33,8 @@ public class ModItemGroups {
                         entries.add(ModItems.RABBI_TOTEM);
                         entries.add(ModItems.HAVA_NAGILA_MUSIC_DISC);
                         entries.add(ModItems.KIPPAH);
+                        entries.add(ModItems.GOLDEN_COINS);
+                        entries.add(ModItems.DAVID_STAR);
                     }))
                     .build());
     public static final ItemGroup BLACK_ITEM_GROUP = Registry.register(Registries.ITEM_GROUP,
@@ -41,6 +43,7 @@ public class ModItemGroups {
                     .displayName(Text.translatable("itemgroup.race-mod.black_items"))
                     .entries(((displayContext, entries) -> {
                         entries.add(ModItems.KOOL_AID);
+                        entries.add(ModItems.KFC_BUCKET);
                     }))
                     .build());
 

@@ -34,6 +34,15 @@ public class ModItems {
                     .saturationModifier(0.3f)
                     .build()
     )));
+    public static final Item KFC_BUCKET = registerItem("kfc_bucket", new Item(new Item.Settings().maxCount(1).food(
+            new FoodComponent.Builder()
+                    .nutrition(9)
+                    .saturationModifier(1f)
+                    .build())
+    ));
+    public static final Item MUSIC_DISC_BASE = registerItem("music_disc_base", new Item(new Item.Settings().maxCount(1)));
+    public static final Item GOLDEN_COINS = registerItem("golden_coins", new Item(new Item.Settings()));
+    public static final Item DAVID_STAR = registerItem("david_star", new Item(new Item.Settings().maxCount(6)));
     public static final Item RABBI_TOTEM = registerItem("rabbi_totem", new Item(new Item.Settings().maxCount(1)));
     public static final Item HAVA_NAGILA_MUSIC_DISC = registerItem("hava_nagila_music_disc",
             new Item(new Item.Settings().jukeboxPlayable(ModSounds.HAVA_NAGILA_KEY).maxCount(1)));

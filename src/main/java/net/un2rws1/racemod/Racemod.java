@@ -115,7 +115,8 @@ public class Racemod implements ModInitializer {
 
 			}
 			if (playerClass != PlayerClass.BLACK){
-				if(item == ModItems.KOOL_AID){
+				if(item == ModItems.KOOL_AID ||
+					item == ModItems.KFC_BUCKET){
 					if(!world.isClient) {
 						player.sendMessage(Text.literal("Only Blacks can consume this"), true);
 					}
@@ -145,7 +146,8 @@ public class Racemod implements ModInitializer {
 				if (item != Items.CHICKEN &&
 						item != Items.COOKED_CHICKEN &&
 						item != Items.MELON_SLICE &&
-						item != ModItems.KOOL_AID) {
+						item != ModItems.KOOL_AID &&
+						item != ModItems.KFC_BUCKET) {
 					if (!world.isClient) {
 						player.sendMessage(Text.literal("Yea you're black, stick to chicken, watermelon and Kool aid"), true);
 					}

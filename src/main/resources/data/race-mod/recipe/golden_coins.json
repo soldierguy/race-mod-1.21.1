@@ -1,9 +1,9 @@
 {
   "type": "minecraft:crafting_shaped",
-  "category": "building",
+  "category" : "misc",
   "key": {
     "#": {
-      "item": "race-mod:brick_poop"
+      "item": "minecraft:gold_nugget"
     }
   },
   "pattern": [
@@ -12,7 +12,7 @@
     "   "
   ],
   "result": {
-    "count": 1,
-    "id": "race-mod:brick_poop_block"
+    "id": "race-mod:golden_coins",
+    "count": 1
   }
 }
