@@ -12,6 +12,10 @@
   "item.race-mod.golden_coins" : "Golden coins",
   "item.race-mod.david_star" : "Star of David",
   "item.race-mod.glasses" : "Glasses",
+  "item.race-mod.wolf_meat" : "Wolf Chop",
+  "item.race-mod.cat_meat" : "Ocelot",
+  "item.race-mod.cooked_cat_meat" : "Cooked Ocelot",
+  "item.race-mod.cooked_wolf_meat" : "Cooked Wolf Chop",
 
   "block.race-mod.poop_block": "Poop Block",
   "block.race-mod.poop_cooked_block": "Cooked Poop Block",

@@ -11,6 +11,7 @@ import net.fabricmc.fabric.api.registry.FabricBrewingRecipeRegistryBuilder;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -34,6 +35,7 @@ import net.un2rws1.racemod.entity.ModEntities;
 import net.un2rws1.racemod.event.PlayerJoinHandler;
 import net.un2rws1.racemod.item.ModItemGroups;
 import net.un2rws1.racemod.item.ModItems;
+import net.un2rws1.racemod.loot.ModLootTableModifiers;
 import net.un2rws1.racemod.networking.ModNetworking;
 import net.un2rws1.racemod.networking.StealAttemptPayload;
 import net.un2rws1.racemod.networking.SyncClassPayload;
@@ -41,6 +43,7 @@ import net.un2rws1.racemod.sound.ModSounds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import net.un2rws1.racemod.event.PlayerRespawnHandler;
+import org.slf4j.MDC;
 
 import java.util.*;
 
@@ -61,6 +64,8 @@ public class Racemod implements ModInitializer {
 		ModEntities.register();
 		ModItems.registerModItems();
 		ModEffects.registerEffects();
+		ModItems.registerModItems();
+		ModLootTableModifiers.modifyLootTables();
 		//Classes (races)
 		ClassAttachmentTypes.init();
 		ModNetworking.register();
@@ -108,6 +113,7 @@ public class Racemod implements ModInitializer {
 			if (playerClass == null) {
 				return TypedActionResult.pass(stack);
 			}
+
 			if (playerClass != PlayerClass.INDIAN){
 				if(item == ModItems.COOKED_POOP){
 					if(!world.isClient) {
@@ -122,6 +128,17 @@ public class Racemod implements ModInitializer {
 					item == ModItems.KFC_BUCKET){
 					if(!world.isClient) {
 						player.sendMessage(Text.literal("Only Blacks can consume this"), true);
+					}
+					return TypedActionResult.fail(stack);
+				}
+			}
+			if (playerClass != PlayerClass.CHINESE){
+				if(item == ModItems.WOLF_MEAT ||
+					item == ModItems.COOKED_WOLF_MEAT ||
+					item == ModItems.CAT_MEAT ||
+					item == ModItems.COOKED_CAT_MEAT){
+					if(!world.isClient) {
+						player.sendMessage(Text.literal("china china china, you're not Chinese"), true);
 					}
 					return TypedActionResult.fail(stack);
 				}
@@ -227,17 +244,7 @@ public class Racemod implements ModInitializer {
 		if (playerClass == PlayerClass.BLACK) {
 			tickThiefSteal(player, state);
 		}
-		if (player instanceof ServerPlayerEntity serverPlayer) {
-			ItemStack headStack = player.getEquippedStack(EquipmentSlot.HEAD);
 
-			if (playerClass == PlayerClass.CHINESE
-					&& headStack.isOf(ModItems.GLASSES)) {
-
-				if (player.age % 1200 == 0) {
-					headStack.damage(1, serverPlayer, EquipmentSlot.HEAD);
-				}
-			}
-		}
 	}
 	private static int countItem(ServerPlayerEntity player, Item item) {
 		int count = 0;

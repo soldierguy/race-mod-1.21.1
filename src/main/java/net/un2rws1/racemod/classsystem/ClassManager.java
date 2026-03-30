@@ -9,6 +9,7 @@ import net.minecraft.entity.player.HungerManager;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.un2rws1.racemod.effect.ModEffects;
 import net.un2rws1.racemod.item.ModItems;
 import net.un2rws1.racemod.networking.OpenClassSelectionPayload;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -221,6 +222,35 @@ public final class ClassManager {
                 ));
             } else {
                 player.removeStatusEffect(StatusEffects.MINING_FATIGUE);
+            }
+        }
+        // =====================================chinese blur====================================
+        ItemStack headStack = player.getEquippedStack(EquipmentSlot.HEAD);
+        boolean wearingGlasses = headStack.isOf(ModItems.GLASSES);
+        if (getPlayerClass(player) == PlayerClass.CHINESE && !wearingGlasses) {
+            if (!player.hasStatusEffect(ModEffects.BLURRY_VISION)) {
+                player.addStatusEffect(new StatusEffectInstance(
+                        ModEffects.BLURRY_VISION,
+                        220,
+                        0,
+                        true,
+                        false,
+                        false
+                ));
+            }
+        } else {
+            player.removeStatusEffect(ModEffects.BLURRY_VISION);
+        }
+        // ===========================================glasses breaking ===================
+        if (getPlayerClass(player) == PlayerClass.CHINESE && headStack.isOf(ModItems.GLASSES)) {
+            if (player.age % 1600 == 0) {
+                int newDamage = headStack.getDamage() + 1;
+
+                if (newDamage >= headStack.getMaxDamage()) {
+                    player.equipStack(EquipmentSlot.HEAD, ItemStack.EMPTY);
+                } else {
+                    headStack.setDamage(newDamage);
+                }
             }
         }
         // =========================================effects after eating/being full=================================

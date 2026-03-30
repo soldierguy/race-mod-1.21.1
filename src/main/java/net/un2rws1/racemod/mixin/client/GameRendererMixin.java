@@ -24,34 +24,32 @@ public abstract class GameRendererMixin {
     private static final Identifier RACEMOD_BLUR =
             Identifier.of(Racemod.MOD_ID, "shaders/post/blurry_vision.json");
 
-    @Unique
-    private boolean racemod$loaded = false;
 
     @Inject(method = "render", at = @At("HEAD"))
     private void racemod$renderBlurryVision(RenderTickCounter tickCounter, boolean tick, CallbackInfo ci) {
-
+        GameRenderer renderer = (GameRenderer) (Object) this;
         if (client.player == null || client.world == null) {
+            if (renderer.getPostProcessor() != null) {
+                renderer.disablePostProcessor();
+            }
             return;
         }
 
         boolean hasBlur = client.player.hasStatusEffect(ModEffects.BLURRY_VISION);
-
+        PostEffectProcessor processor = renderer.getPostProcessor();
         if (hasBlur) {
-
-            if (!racemod$loaded) {
-                ((GameRendererAccessor)(Object)this)
-                        .racemod$loadPostProcessor(RACEMOD_BLUR);
-                racemod$loaded = true;
+            if (processor == null) {
+                ((GameRendererAccessor) (Object) this).racemod$loadPostProcessor(RACEMOD_BLUR);
+                processor = renderer.getPostProcessor();
             }
 
-            PostEffectProcessor processor = ((GameRenderer)(Object)this).getPostProcessor();
+           if (processor != null) {
+                processor.setUniforms("Radius", 10F);
+            }
+        } else {
             if (processor != null) {
-                processor.setUniforms("Radius", 10.0f);
+                renderer.disablePostProcessor();
             }
-
-        } else if (racemod$loaded) {
-            ((GameRenderer)(Object)this).disablePostProcessor();
-            racemod$loaded = false;
         }
     }
 }

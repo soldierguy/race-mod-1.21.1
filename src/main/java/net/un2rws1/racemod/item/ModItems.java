@@ -45,10 +45,35 @@ public class ModItems {
     )));
     public static final Item KFC_BUCKET = registerItem("kfc_bucket", new Item(new Item.Settings().maxCount(1).food(
             new FoodComponent.Builder()
-                    .nutrition(9)
+                    .nutrition(18)
                     .saturationModifier(1f)
                     .build())
     ));
+    public static final Item WOLF_MEAT = registerItem("wolf_meat", new Item(new Item.Settings().food(
+            new FoodComponent.Builder()
+                    .nutrition(4)
+                    .saturationModifier(0.25f)
+                    .build())
+    ));
+    public static final Item CAT_MEAT = registerItem("cat_meat", new Item(new Item.Settings().food(
+            new FoodComponent.Builder()
+                    .nutrition(3)
+                    .saturationModifier(0.25f)
+                    .build())
+    ));
+    public static final Item COOKED_CAT_MEAT = registerItem("cooked_cat_meat", new Item(new Item.Settings().food(
+            new FoodComponent.Builder()
+                    .nutrition(6)
+                    .saturationModifier(0.6f)
+                    .build())
+    ));
+    public static final Item COOKED_WOLF_MEAT = registerItem("cooked_wolf_meat", new Item(new Item.Settings().food(
+            new FoodComponent.Builder()
+                    .nutrition(8)
+                    .saturationModifier(0.8f)
+                    .build())
+    ));
+
     public static final Item MUSIC_DISC_BASE = registerItem("music_disc_base", new Item(new Item.Settings().maxCount(1)));
     public static final Item GOLDEN_COINS = registerItem("golden_coins", new Item(new Item.Settings()));
     public static final Item DAVID_STAR = registerItem("david_star", new Item(new Item.Settings().maxCount(6)));

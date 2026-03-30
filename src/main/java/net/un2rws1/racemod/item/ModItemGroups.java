@@ -52,6 +52,10 @@ public class ModItemGroups {
                     .displayName(Text.translatable("itemgroup.race-mod.chinese_items"))
                     .entries(((displayContext, entries) -> {
                         entries.add(ModItems.GLASSES);
+                        entries.add(ModItems.CAT_MEAT);
+                        entries.add(ModItems.WOLF_MEAT);
+                        entries.add(ModItems.COOKED_CAT_MEAT);
+                        entries.add(ModItems.COOKED_WOLF_MEAT);
             }))
         .build());
 
