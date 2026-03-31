@@ -24,7 +24,9 @@
 		"BrewingStandBlockEntityMixin",
 		"BrewingStandIngredientSlotMixin",
 		"client.GameRendererAccessor",
-		"client.GameRendererMixin"
+		"client.GameRendererMixin",
+		"VillagerEntityMixin",
+		"BedBlockMixin"
 	],
 
 	"injectors": {

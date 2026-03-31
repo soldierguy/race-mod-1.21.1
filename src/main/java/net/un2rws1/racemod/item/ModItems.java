@@ -37,6 +37,8 @@ public class ModItems {
             )
     );
     public static final Item POOP_BRICK = registerItem("brick_poop", new Item(new Item.Settings()));
+    public static final Item GREEN_CARD = registerItem("green_card", new Item(new Item.Settings().maxCount(1)));
+
     public static final Item COOKED_POOP = registerItem("cooked_poop", new Item(new Item.Settings().food(
             new FoodComponent.Builder()
                     .nutrition(3)

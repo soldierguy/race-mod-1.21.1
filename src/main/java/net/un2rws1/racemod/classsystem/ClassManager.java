@@ -377,6 +377,12 @@ public final class ClassManager {
                 player.dropItem(stack, false);
             }
         }
+        if (chosenClass.getId().equalsIgnoreCase("mexican")) {
+            ItemStack stack = new ItemStack(ModItems.GREEN_CARD, 1);
+            if (!player.getInventory().insertStack(stack)) {
+                player.dropItem(stack, false);
+            }
+        }
         applyClassEffects(player, chosenClass);
         System.out.println("[RaceMod] Sending race sync: " + chosenClass.getId());
         ServerPlayNetworking.send(player, new SyncClassPayload(chosenClass.getId()));
@@ -394,6 +400,12 @@ public final class ClassManager {
         if (newClass.getId().equalsIgnoreCase("jew")) {
             ItemStack stack = new ItemStack(ModItems.HAVA_NAGILA_MUSIC_DISC, 1);
             ensureKippah(player);
+            if (!player.getInventory().insertStack(stack)) {
+                player.dropItem(stack, false);
+            }
+        }
+        if (newClass.getId().equalsIgnoreCase("mexican")) {
+            ItemStack stack = new ItemStack(ModItems.GREEN_CARD, 1);
             if (!player.getInventory().insertStack(stack)) {
                 player.dropItem(stack, false);
             }

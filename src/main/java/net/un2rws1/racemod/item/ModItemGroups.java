@@ -58,6 +58,24 @@ public class ModItemGroups {
                         entries.add(ModItems.COOKED_WOLF_MEAT);
             }))
         .build());
+    public static final ItemGroup MEXICAN_ITEM_GROUP = Registry.register(Registries.ITEM_GROUP,
+            Identifier.of(Racemod.MOD_ID, "mexican_items"),
+            FabricItemGroup.builder().icon(() -> new ItemStack(ModItems.GREEN_CARD))
+                    .displayName(Text.translatable("itemgroup.race-mod.mexican_items"))
+                    .entries(((displayContext, entries) -> {
+                        entries.add(ModItems.GREEN_CARD);
+
+                    }))
+                    .build());
+    public static final ItemGroup RACE_MOD_ITEM_GROUP = Registry.register(Registries.ITEM_GROUP,
+            Identifier.of(Racemod.MOD_ID, "race_mod_items"),
+            FabricItemGroup.builder().icon(() -> new ItemStack(ModItems.MUSIC_DISC_BASE))
+                    .displayName(Text.translatable("itemgroup.race-mod.race_mod_items"))
+                    .entries(((displayContext, entries) -> {
+                        entries.add(ModItems.MUSIC_DISC_BASE);
+
+                    }))
+                    .build());
 
     public static void registerItemGroups() {
         Racemod.LOGGER.info("Registering Item Groups for " + Racemod.MOD_ID);
