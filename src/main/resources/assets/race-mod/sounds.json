@@ -30,5 +30,21 @@
         "stream": true
       }
     ]
+  },
+  "dont_talk": {
+    "sounds": [
+      {
+        "name": "race-mod:dont_talk",
+        "stream": true
+      }
+    ]
+  },
+  "ern": {
+    "sounds": [
+      {
+        "name": "race-mod:ern",
+        "stream": true
+      }
+    ]
   }
 }

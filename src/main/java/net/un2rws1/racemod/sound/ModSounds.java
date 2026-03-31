@@ -28,6 +28,14 @@ public class ModSounds {
     public static final RegistryKey<JukeboxSong> LA_CUCARACHA_KEY =
             RegistryKey.of(RegistryKeys.JUKEBOX_SONG, Identifier.of(Racemod.MOD_ID, "la_cucaracha"));
 
+    public static final SoundEvent DONT_TALK = registerSoundEvent("dont_talk");
+    public static final RegistryKey<JukeboxSong> DONT_TALK_KEY =
+            RegistryKey.of(RegistryKeys.JUKEBOX_SONG, Identifier.of(Racemod.MOD_ID, "dont_talk"));
+
+    public static final SoundEvent ERN = registerSoundEvent("ern");
+    public static final RegistryKey<JukeboxSong> ERN_KEY =
+            RegistryKey.of(RegistryKeys.JUKEBOX_SONG, Identifier.of(Racemod.MOD_ID, "ern"));
+
 
 
 

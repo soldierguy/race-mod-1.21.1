@@ -3,6 +3,6 @@
   "description" : {
     "translate": "item.race-mod.la_cucaracha_music_disc.desc"
   },
-  "length_in_seconds": 155.0,
+  "length_in_seconds": 145.0,
   "sound_event": "race-mod:la_cucaracha"
 }
