@@ -1,0 +1,8 @@
+{
+  "comparator_output": 15,
+  "description" : {
+    "translate": "item.race-mod.n2_disc.desc"
+  },
+  "length_in_seconds": 143.0,
+  "sound_event": "race-mod:n2"
+}

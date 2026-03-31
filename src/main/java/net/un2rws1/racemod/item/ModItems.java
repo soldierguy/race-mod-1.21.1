@@ -82,6 +82,8 @@ public class ModItems {
     public static final Item RABBI_TOTEM = registerItem("rabbi_totem", new Item(new Item.Settings().maxCount(1)));
     public static final Item HAVA_NAGILA_MUSIC_DISC = registerItem("hava_nagila_music_disc",
             new Item(new Item.Settings().jukeboxPlayable(ModSounds.HAVA_NAGILA_KEY).maxCount(1)));
+    public static final Item N2_MUSIC_DISC = registerItem("n2_music_disc",
+            new Item(new Item.Settings().jukeboxPlayable(ModSounds.N2_KEY).maxCount(1)));
     public static final Item KOOL_AID = registerItem("kool_aid", new Item(new Item.Settings().food(
             new FoodComponent.Builder()
                     .nutrition(3)

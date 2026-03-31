@@ -17,6 +17,8 @@
   "item.race-mod.cooked_cat_meat" : "Cooked Ocelot",
   "item.race-mod.cooked_wolf_meat" : "Cooked Wolf Chop",
   "item.race-mod.green_card" : "Green Card",
+  "item.race-mod.n2_music_disc" : "NiggaChain.AI Layer 2",
+  "item.race-mod.n2_disc.desc" : "NiggaChain.AI Layer 2 - N2 on Solana",
 
   "block.race-mod.poop_block": "Poop Block",
   "block.race-mod.poop_cooked_block": "Cooked Poop Block",

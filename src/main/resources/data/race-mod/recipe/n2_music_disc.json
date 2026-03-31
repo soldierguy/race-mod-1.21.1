@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category" : "misc",
+  "key": {
+    "C": {
+      "item": "race-mod:music_disc_base"
+    },
+    "K": {
+      "item": "race-mod:kfc_bucket"
+    },
+    "R": {
+      "item": "race-mod:kool_aid"
+    }
+  },
+  "pattern": [
+    "K K",
+    " C ",
+    "R R"
+  ],
+  "result": {
+    "id": "race-mod:n2_music_disc",
+    "count": 1
+  }
+}

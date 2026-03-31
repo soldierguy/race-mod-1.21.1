@@ -44,6 +44,7 @@ public class ModItemGroups {
                     .entries(((displayContext, entries) -> {
                         entries.add(ModItems.KOOL_AID);
                         entries.add(ModItems.KFC_BUCKET);
+                        entries.add(ModItems.N2_MUSIC_DISC);
                     }))
                     .build());
     public static final ItemGroup CHINESE_ITEM_GROUP = Registry.register(Registries.ITEM_GROUP,

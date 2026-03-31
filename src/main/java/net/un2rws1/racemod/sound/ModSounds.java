@@ -16,6 +16,11 @@ public class ModSounds {
     public static final RegistryKey<JukeboxSong> HAVA_NAGILA_KEY =
             RegistryKey.of(RegistryKeys.JUKEBOX_SONG, Identifier.of(Racemod.MOD_ID, "hava_nagila"));
 
+    public static final SoundEvent N2 = registerSoundEvent("n2");
+    public static final RegistryKey<JukeboxSong> N2_KEY =
+            RegistryKey.of(RegistryKeys.JUKEBOX_SONG, Identifier.of(Racemod.MOD_ID, "n2"));
+
+
 
 
 
