@@ -243,7 +243,7 @@ public final class ClassManager {
         }
         // ===========================================glasses breaking ===================
         if (getPlayerClass(player) == PlayerClass.CHINESE && headStack.isOf(ModItems.GLASSES)) {
-            if (player.age % 1600 == 0) {
+            if (player.age % 600 == 0) {
                 int newDamage = headStack.getDamage() + 1;
 
                 if (newDamage >= headStack.getMaxDamage()) {

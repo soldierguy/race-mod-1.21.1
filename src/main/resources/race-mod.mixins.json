@@ -27,7 +27,9 @@
 		"client.GameRendererMixin",
 		"VillagerEntityMixin",
 		"BedBlockMixin",
-		"PointOfInterestTypesAccessor"
+		"PointOfInterestTypesAccessor",
+		"EndPortalBlockMixin",
+		"NetherPortalBlockMixin"
 	],
 
 	"injectors": {

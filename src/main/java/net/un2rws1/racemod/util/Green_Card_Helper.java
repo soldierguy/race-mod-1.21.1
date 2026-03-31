@@ -2,7 +2,9 @@ package net.un2rws1.racemod.util;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.registry.RegistryKey;
 import net.minecraft.text.Text;
+import net.minecraft.world.World;
 import net.un2rws1.racemod.Racemod;
 import net.un2rws1.racemod.classsystem.PlayerClass;
 import net.un2rws1.racemod.item.ModItems;
@@ -38,6 +40,9 @@ public class Green_Card_Helper {
 
     public static boolean mexicanNeedsTicket(PlayerEntity player) {
         return isMEXICAN(player) && !hasGreen_Card(player);
+    }
+    public static boolean isNetherOrEnd(RegistryKey<World> worldKey) {
+        return worldKey == World.NETHER || worldKey == World.END;
     }
 
     public static void sendNoTicketMessage(PlayerEntity player, String action) {
